@@ -9,7 +9,7 @@ from albumentations.pytorch import ToTensorV2
 from tqdm import tqdm
 import torch.nn as nn
 import torch.optim as optim
-from UNET_model_example import UNET
+from model import UNET
 from utils import (
     load_checkpoint,
     save_checkpoint,
@@ -23,15 +23,17 @@ from utils import (
 
 # Hyperparameters etc.
 LEARNING_RATE = 1e-4
+RATES = [1e-4, 1e-3, 1e-2]
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 2
-NUM_EPOCHS = 10
+BATCHES = [2, 4, 8, 16, 32]
+NUM_EPOCHS = 50
 NUM_WORKERS = 2
 IMAGE_HEIGHT = 160 # changing size later in the training process to increase accuracy, then resize with nearest interpolation
 IMAGE_WIDTH = 240 
 PIN_MEMORY = True
 LOAD_MODEL = False
-PATH = "Treibsel_Anomaly_Detection/PyTorch_Playground/UNET_example/"
+PATH = "Treibsel_Anomaly_Detection/"
 TRAIN_IMG_DIR = PATH + "data/train_images/"
 TRAIN_MASK_DIR = PATH + "data/train_masks/"
 VAL_IMG_DIR = PATH + "data/val_images/"
