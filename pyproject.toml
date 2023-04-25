@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "cnn-seagras"
+version = "0.1.0"
+description = ""
+license = "CC0-1.0"
+authors = ["Taenar97 <sven1997@gmx.net>"]
+readme = "README.md"
+homepage = "https://www.balticmaterials.de/"
+repository = "https://github.com/BalticMaterials/CNN-Seagras/"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Framework :: Jupyter",
+    "Intended Audience :: Science/Research",
+    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "Natural Language :: English",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Programming Language :: Python",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+packages = [{include = "Treibsel_Anomaly_Detection"}]
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = "^2.0.0"
+numpy = "^1.24.2"
+pillow = "^9.4.0"
+torchvision = "^0.15.1"
+catalyst = "^22.4"
+albumentations = "^1.3.0"
+torchmetrics = "^0.11.4"
+tensorboard = "^2.12.0"
+torch-tb-profiler = "^0.4.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
