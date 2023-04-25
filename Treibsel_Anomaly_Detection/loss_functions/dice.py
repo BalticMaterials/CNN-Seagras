@@ -18,3 +18,6 @@ class DiceLoss(nn.Module):
         dice = (2.*intersection + smooth)/(inputs.sum() + targets.sum() + smooth)  
         
         return 1 - dice
+    
+    def get_name() -> str:
+        return "DiceLoss"

@@ -23,3 +23,6 @@ class IoULoss(nn.Module):
         IoU = (intersection + smooth)/(union + smooth)
                 
         return 1 - IoU
+    
+    def get_name() -> str:
+        return "IntersectionOverUnionLoss"

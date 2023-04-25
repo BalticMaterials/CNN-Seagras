@@ -26,6 +26,9 @@ class TverskyLoss(nn.Module):
         Tversky = (TP + smooth) / (TP + alpha*FP + beta*FN + smooth)  
         
         return 1 - Tversky
+    
+    def get_name() -> str:
+        return f"TverskyLoss Alpha: {ALPHA}, Beta: {BETA}"
 
 class FocalTverskyLoss(nn.Module):
     def __init__(self, weight=None, size_average=True):
@@ -49,3 +52,6 @@ class FocalTverskyLoss(nn.Module):
         FocalTversky = (1 - Tversky)**gamma
                        
         return FocalTversky
+    
+    def get_name() -> str:
+        return "FocalTverskyLoss Alpha: {ALPHA}, Beta: {BETA}, Gamma: {GAMMA}"

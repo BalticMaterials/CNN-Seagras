@@ -180,3 +180,6 @@ pyrightconfig.json
 
 # Modell
 *.pth.tar
+
+# metrics
+/runs

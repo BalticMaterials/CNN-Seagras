@@ -148,7 +148,7 @@ def write_metrics_to_TensorBoard(metrics: dict[str, float], epoch: int, run_name
         run_name (str, optional): Name of run for differentiation of multiple test runs. Defaults to "Test run".
     """
     logging.info("Saving metrics to TensorBoard...")
-    writer.add_scalars("Test run", metrics, epoch)
+    writer.add_scalars(run_name, metrics, epoch)
     writer.flush()
 
 def write_loss_to_TensorBoard(loss: float, batch_id: int, batch_size: int, epoch: int) -> None:
@@ -162,5 +162,5 @@ def write_loss_to_TensorBoard(loss: float, batch_id: int, batch_size: int, epoch
     """
     logging.info("Saving loss of batch to TensorBoard...")
     factor = math.ceil(NUM_DATA / batch_size)
-    writer.add_scalar("Loss per Batch", loss, ((epoch) * factor) + (batch_id))
+    writer.add_scalar("Loss per Batch", loss, ((epoch * factor) + batch_id))
     writer.flush()
