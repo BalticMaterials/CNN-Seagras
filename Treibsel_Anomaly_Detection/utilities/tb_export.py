@@ -54,7 +54,7 @@ def convert_tb_data(root_dir, sort_by=None):
         
     return all_df.reset_index(drop=True)
 
-def save_stuff(ex):
+def save_as_csv(ex: tuple(str, pd.DataFrame)) -> None:
     path = "./eval/"
     ex[1].to_csv(path + ex[0].replace(":", "_") + ".csv")
 
@@ -84,4 +84,4 @@ if __name__ == "__main__":
                 exp.append((name, df_new))
 
     for ex in exp:
-        save_stuff(ex)
+        save_as_csv(ex)
