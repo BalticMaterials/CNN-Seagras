@@ -183,3 +183,4 @@ pyrightconfig.json
 
 # metrics
 # /runs
+/eval
