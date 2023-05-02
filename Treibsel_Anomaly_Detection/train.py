@@ -21,16 +21,15 @@ from utils import (
     write_loss_to_TensorBoard,
 )
 
-
 # Hyperparameters etc.
-RUN_NAME = "BCEWithLogitsLoss"
+RUN_NAME = "IoU Loss"
 LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 2
 NUM_EPOCHS = 50
 NUM_WORKERS = 2
-IMAGE_HEIGHT = 160 # changing size later in the training process to increase accuracy, then resize with nearest interpolation
-IMAGE_WIDTH = 240 
+IMAGE_HEIGHT = 256 # changing size later in the training process to increase accuracy, then resize with nearest interpolation
+IMAGE_WIDTH = 256 
 PIN_MEMORY = True
 LOAD_MODEL = False
 PATH = "Treibsel_Anomaly_Detection/"
@@ -42,16 +41,17 @@ VAL_MASK_DIR = PATH + "data/val_masks/"
 def train_fn(loader, model, optimizer, loss_fn, scaler, epoch):
     loop = tqdm(loader) # Progressbar
     loss_in_epoch = 0
+
     for batch_idx, (data, targets) in enumerate(loop):
         data = data.to(device=DEVICE)
         targets = targets.float().unsqueeze(1).to(device=DEVICE)
-
+        
         # forward
         with torch.cuda.amp.autocast():
             predictions = model(data)
             loss = loss_fn(predictions, targets)
 
-        # backward
+        # backward        
         optimizer.zero_grad()
         scaler.scale(loss).backward()
         scaler.step(optimizer)
@@ -65,9 +65,10 @@ def train_fn(loader, model, optimizer, loss_fn, scaler, epoch):
 
 
 def main():
+    torch.set_grad_enabled(True)
     train_transform = A.Compose([
         A.Resize(height=IMAGE_HEIGHT, width=IMAGE_WIDTH),
-        A.Rotate(limit=35, p=1.0),
+        # A.Rotate(limit=35, p=1.0),
         A.HorizontalFlip(p=0.5),
         A.VerticalFlip(p=0.1),
         A.Normalize(
@@ -94,11 +95,11 @@ def main():
     model = UNET(in_channels=3, out_channels=1).to(DEVICE)
 
     from loss_functions.dice import DiceLoss
-    from loss_functions.IoU import IoULoss
-    from loss_functions.tversky import TverskyLoss, FocalTverskyLoss    
-    loss_fn = nn.BCEWithLogitsLoss()
+    # from loss_functions.IoU import IoULoss
+    # from loss_functions.tversky import TverskyLoss, FocalTverskyLoss    
+    loss_fn = DiceLoss()
 
-    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
+    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE) # Adam
 
     train_loader, val_loader = get_loaders(
         TRAIN_IMG_DIR,
