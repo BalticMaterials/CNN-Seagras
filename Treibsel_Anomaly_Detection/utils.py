@@ -1,7 +1,7 @@
 import math
 import os
 import logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 
 import torch
 from torch import Tensor
@@ -9,7 +9,7 @@ from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter()
 import torchvision
 torchvision.disable_beta_transforms_warning()
-from torchmetrics.functional.classification import binary_jaccard_index, binary_precision, binary_recall, binary_f1_score
+from torchmetrics.functional.classification import binary_jaccard_index, binary_recall, binary_f1_score
 from dataset import SeegrasDataset
 from torch.utils.data import DataLoader
 

@@ -95,11 +95,10 @@ def main():
     model = UNET(in_channels=3, out_channels=1).to(DEVICE)
 
     from loss_functions.dice import DiceLoss
-    # from loss_functions.IoU import IoULoss
-    # from loss_functions.tversky import TverskyLoss, FocalTverskyLoss    
+    # from loss_functions.IoU import IoULoss    
     loss_fn = DiceLoss()
 
-    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE) # Adam
+    optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE) # Adam
 
     train_loader, val_loader = get_loaders(
         TRAIN_IMG_DIR,

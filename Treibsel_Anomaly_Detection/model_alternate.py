@@ -78,8 +78,14 @@ class UNET(nn.Module):
         return self.final_conv(x)
 
 def test():
-    x = torch.randn((5, 1, 512, 512))
+    x = torch.randn([1, 1, 1520, 1520])
+
     model = UNET(in_channels=1, out_channels=1)
+    # model.load_state_dict(torch.load("./Treibsel_Anomaly_Detection/data/my_checkpoint.pth.tar")["state_dict"])
+
+    # for param_tensor in model.state_dict():
+    #     print(param_tensor, "\t", model.state_dict()[param_tensor].size())
+
     preds = model(x)
     print(preds.shape)
     print(x.shape)
