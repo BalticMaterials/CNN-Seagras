@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "cnn-seagras"
+version = "0.1.0"
+description = ""
+authors = ["Tjark Ziehm"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "cnn_seagras"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
