@@ -72,6 +72,12 @@ def generate_metrics(loader, model, device: str = "cpu") -> dict[str, float]:
     jaccard = 0
     model.eval()
 
+    # TO-DO:
+    # warping-error
+    # rand error
+    # pixel error
+    # Intersection over union
+
     with torch.no_grad():
         for x, y in loader:
             x = x.to(device)

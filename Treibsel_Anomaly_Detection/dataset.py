@@ -15,14 +15,16 @@ class SeegrasDataset(Dataset):
     
     def __getitem__(self, index):
         img_path = os.path.join(self.image_dir, self.images[index])
-        mask_path = os.path.join(self.mask_dir, self.images[index].replace(".jpg", "_Maske.jpg"))
+        mask_path = os.path.join(self.mask_dir, self.images[index].replace(".bmp", "_mask.bmp"))
         image = np.array(Image.open(img_path).convert("RGB"))
         mask = np.array(Image.open(mask_path).convert("L"), dtype=np.float32)
         mask[mask <= 50] = 0
         mask[mask >= 200.0] = 1.0
+
         # DEBUG
         # print(np.max(mask))
         # DEBUG 
+        
         if self.transform is not None: # Augmentations
             augmentations = self.transform(image=image, mask=mask)
             image = augmentations["image"]

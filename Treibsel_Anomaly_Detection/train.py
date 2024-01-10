@@ -22,14 +22,14 @@ from utils import (
 )
 
 # Hyperparameters etc.
-RUN_NAME = "IoU Loss"
+RUN_NAME = "Test"
 LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-BATCH_SIZE = 2
+BATCH_SIZE = 1
 NUM_EPOCHS = 50
 NUM_WORKERS = 2
-IMAGE_HEIGHT = 256 # changing size later in the training process to increase accuracy, then resize with nearest interpolation
-IMAGE_WIDTH = 256 
+IMAGE_HEIGHT = 512 # changing size later in the training process to increase accuracy, then resize with nearest interpolation
+IMAGE_WIDTH = 512 
 PIN_MEMORY = True
 LOAD_MODEL = False
 PATH = "Treibsel_Anomaly_Detection/"
@@ -93,12 +93,12 @@ def main():
     logging.info(f"Start of run: {RUN_NAME}")
 
     model = UNET(in_channels=3, out_channels=1).to(DEVICE)
+    
+    # TO-DO:
+    # "[...] pixel-wise soft-max over the final feature map combined with the cross entropy loss function."
+    loss_fn = nn.BCEWithLogitsLoss()
 
-    from loss_functions.dice import DiceLoss
-    # from loss_functions.IoU import IoULoss    
-    loss_fn = DiceLoss()
-
-    optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE) # Adam
+    optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.99) # High momentum due to small batch size
 
     train_loader, val_loader = get_loaders(
         TRAIN_IMG_DIR,
