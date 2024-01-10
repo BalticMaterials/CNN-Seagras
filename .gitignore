@@ -177,6 +177,7 @@ pyrightconfig.json
 *.jpg
 *.png
 *.tiff
+*.bmp
 
 # Modell
 *.pth.tar
