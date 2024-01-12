@@ -5,6 +5,7 @@
 import logging
 import torch
 import torchvision
+import numpy as np
 torchvision.disable_beta_transforms_warning()
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
@@ -46,7 +47,14 @@ def train_fn(loader, model, optimizer, loss_fn, scaler, epoch):
 
     for batch_idx, (data, targets) in enumerate(loop):
         data = data.to(device=DEVICE)
+        # print(max(targets))
+
+        # class_weights = torch.tensor(compute_class_weight(class_weight='balanced', classes=np.unique(targets), y=targets ))
+        # print(class_weights)
+        # loss_fn = nn.BCEWithLogitsLoss()
+
         targets = targets.float().unsqueeze(1).to(device=DEVICE)
+        
         
         # forward
         with torch.cuda.amp.autocast():
@@ -98,8 +106,8 @@ def main():
     
     # TO-DO:
     # "[...] pixel-wise soft-max over the final feature map combined with the cross entropy loss function."
-    class_weights = torch.tensor(compute_class_weight(class_weight='balanced', classes=[0, 1] ))
-    loss_fn = nn.BCEWithLogitsLoss(weight=class_weights) # weight can be added to make it weighted or balanced BCE. Weight tensor must be calculated beforehand
+    # class_weights = torch.tensor(compute_class_weight(class_weight='balanced', classes=[0, 1],  ))
+    loss_fn = nn.BCEWithLogitsLoss() # weight can be added to make it weighted or balanced BCE. Weight tensor must be calculated beforehand
 
     optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.99) # High momentum due to small batch size
 
