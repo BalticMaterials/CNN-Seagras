@@ -1,5 +1,6 @@
 # https://www.youtube.com/watch?v=IHq1t7NxS8k
-# Tensorboard start in seperate shell: tensorboard --logdir=runs
+# Tensorboard start in seperate shell:  poetry run tensorboard --logdir=runs
+# acces: http://localhost:6006/
 
 import logging
 import torch
@@ -7,6 +8,7 @@ import torchvision
 torchvision.disable_beta_transforms_warning()
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
+from sklearn.utils.class_weight import compute_class_weight
 from tqdm import tqdm
 import torch.nn as nn
 import torch.optim as optim
@@ -96,7 +98,8 @@ def main():
     
     # TO-DO:
     # "[...] pixel-wise soft-max over the final feature map combined with the cross entropy loss function."
-    loss_fn = nn.BCEWithLogitsLoss()
+    class_weights = torch.tensor(compute_class_weight(class_weight='balanced', classes=[0, 1] ))
+    loss_fn = nn.BCEWithLogitsLoss(weight=class_weights) # weight can be added to make it weighted or balanced BCE. Weight tensor must be calculated beforehand
 
     optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.99) # High momentum due to small batch size
 

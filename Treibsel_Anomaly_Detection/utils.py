@@ -9,7 +9,7 @@ from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter()
 import torchvision
 torchvision.disable_beta_transforms_warning()
-from torchmetrics.functional.classification import binary_jaccard_index, binary_recall, binary_f1_score
+from torchmetrics.functional.classification import binary_jaccard_index, binary_recall, binary_f1_score, binary_accuracy
 from dataset import SeegrasDataset
 from torch.utils.data import DataLoader
 
@@ -68,15 +68,10 @@ def get_loaders(
 def generate_metrics(loader, model, device: str = "cpu") -> dict[str, float]:
     logging.info("Evaluating Model")
     recall = 0
-    f1_score = 0
-    jaccard = 0
+    f1_score = 0 # == Dice Coeficient
+    jaccard = 0 # == IoU
+    accuracy = 0
     model.eval()
-
-    # TO-DO:
-    # warping-error
-    # rand error
-    # pixel error
-    # Intersection over union
 
     with torch.no_grad():
         for x, y in loader:
@@ -85,15 +80,18 @@ def generate_metrics(loader, model, device: str = "cpu") -> dict[str, float]:
             preds = torch.sigmoid(model(x))
             preds = (preds > 0.5).int()
 
+            accuracy += binary_accuracy(preds, y)
             recall += binary_recall(preds, y)
             f1_score += binary_f1_score(preds, y)
             jaccard += binary_jaccard_index(preds, y)           
     
+    accuracy = accuracy/len(loader)
     recall = recall/len(loader)
     f1_score = f1_score/len(loader)
     jaccard = jaccard/len(loader)
 
     metrics = {
+        "pixel_accuracy" : accuracy,
         "recall" : recall,
         "f1_score": f1_score,
         "jaccard_index": jaccard

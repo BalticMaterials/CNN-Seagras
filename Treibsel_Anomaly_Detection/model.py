@@ -72,7 +72,7 @@ class UNET(nn.Module):
                 x = TF.resize(x, size=skip_connection.shape[2:]) # [image, channel, X, Y]
 
             concat_skip = torch.cat((skip_connection, x), dim=1) # concatination of the skip connection tensor with the upwards tensor
-            print(skip_connection.shape, x.shape, concat_skip.shape)
+            # print(skip_connection.shape, x.shape, concat_skip.shape)
             x = self.ups[idx+1](concat_skip)
 
         return self.final_conv(x)

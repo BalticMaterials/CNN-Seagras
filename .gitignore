@@ -185,3 +185,7 @@ pyrightconfig.json
 # metrics
 /runs
 /eval
+
+# tensorboard
+*.0
+*.1
