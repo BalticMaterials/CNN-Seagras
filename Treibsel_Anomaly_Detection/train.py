@@ -47,6 +47,9 @@ def train_fn(loader, model, optimizer, loss_fn, scaler, epoch):
 
     for batch_idx, (data, targets) in enumerate(loop):
         data = data.to(device=DEVICE)
+        
+        # TO-DO: Class imbalance has to be managed by giving the loss function a weight for each image because batch size 1
+        
         # print(max(targets))
 
         # class_weights = torch.tensor(compute_class_weight(class_weight='balanced', classes=np.unique(targets), y=targets ))
@@ -81,6 +84,8 @@ def main():
         # A.Rotate(limit=35, p=1.0),
         A.HorizontalFlip(p=0.5),
         A.VerticalFlip(p=0.1),
+        # TO-DO: are the mean and std lists correct with [0,0,0] and [1,1,1]. Std. implimentation has different values.
+        # Should a custom one be calculated once for an average of the samples or is the std better?
         A.Normalize(
             mean=[0.0, 0.0, 0.0],
             std=[1.0, 1.0, 1.0],
@@ -91,6 +96,9 @@ def main():
 
     val_transform = A.Compose([
         A.Resize(height=IMAGE_HEIGHT, width=IMAGE_WIDTH),
+        # TO-DO: Check if Normalize is correctly applied to the masks. 
+        # Mask are loaded in 'L', not in 'RGB', so only 1 channel with [0 - 255] not three channels with [0 - 255][0 - 255][0 - 255], furthermore masks only have [0, 1]
+        # Hence max_pixel_value=255 is not correct but should be 1? 
         A.Normalize(
             mean=[0.0, 0.0, 0.0],
             std=[1.0, 1.0, 1.0],
