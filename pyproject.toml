@@ -1,3 +1,4 @@
+
 [tool.poetry]
 name = "cnn-seagras"
 version = "0.1.0"
@@ -36,6 +37,23 @@ seaborn = "^0.12.2"
 torch = { url = "https://download.pytorch.org/whl/cu121/torch-2.1.2%2Bcu121-cp310-cp310-win_amd64.whl"}
 torchaudio = { url = "https://download.pytorch.org/whl/cu121/torchaudio-2.1.2%2Bcu121-cp310-cp310-win_amd64.whl"}
 torchvision = { url = "https://download.pytorch.org/whl/cu121/torchvision-0.16.2%2Bcu121-cp310-cp310-win_amd64.whl"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+=======
+[tool.poetry]
+name = "cnn-seagras"
+version = "0.1.0"
+description = ""
+authors = ["Tjark Ziehm"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "cnn_seagras"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
 
 
 [build-system]
