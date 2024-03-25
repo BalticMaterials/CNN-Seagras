@@ -34,7 +34,10 @@
     <img src="images/BalticMaterials_Logo_linksbuendig-1-600x113.webp" alt="Logo" width="600" height="113">
   </a>
 
-<h3 align="center">Python Script Collection</h3>
+<h3 align="center">Anwendung des Convolutional Neural
+Network Modells U-Net im Kontext
+der automatisierten Gewinnung von
+Seegras aus Treibsel</h3>
 
   <p align="center">
     different python scripts sorted in folders in field of application
