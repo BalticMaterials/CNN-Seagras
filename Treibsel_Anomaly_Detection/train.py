@@ -1,15 +1,19 @@
 # https://www.youtube.com/watch?v=IHq1t7NxS8k
 # Tensorboard start in seperate shell:  poetry run tensorboard --logdir=runs
 # acces: http://localhost:6006/
+# Single GPU Mode
 
 import logging
 import torch
+#Seed für Vergleichbarkeit ( für Produktion entfernen )
+torch.manual_seed(42)
+
 import torchvision
 import numpy as np
 torchvision.disable_beta_transforms_warning()
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
-from sklearn.utils.class_weight import compute_class_weight
+# from sklearn.utils.class_weight import compute_class_weight
 from tqdm import tqdm
 import torch.nn as nn
 import torch.optim as optim
@@ -26,14 +30,25 @@ from utils import (
 
 # Hyperparameters etc.
 RUN_NAME = "Test"
+
+#Min LR 1e-4 ist nach Erfahrung bester Wert. Alternativ learningRate decay.
 LEARNING_RATE = 1e-4
+
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+# Laut Paper BS = 1, da besserer / höherer Momentum Wert 0,99
 BATCH_SIZE = 1
-NUM_EPOCHS = 50
+NUM_EPOCHS = 100
 NUM_WORKERS = 2
-IMAGE_HEIGHT = 512 # changing size later in the training process to increase accuracy, then resize with nearest interpolation
-IMAGE_WIDTH = 512 
+
+# Bildgröße: Ergibt addiert die "originale" Bildgröße ( Bild-Size verdoppelung führt zu hoher Rechenzeit)
+#Das Originalbild wird auf folgende Formate komprimiert
+IMAGE_HEIGHT = 768 
+IMAGE_WIDTH = 768 
+
 PIN_MEMORY = True
+
+#Falls Vorhandenes Modell exisitert
 LOAD_MODEL = False
 PATH = "Treibsel_Anomaly_Detection/"
 TRAIN_IMG_DIR = PATH + "data/train_images/"
@@ -47,15 +62,12 @@ def train_fn(loader, model, optimizer, loss_fn, scaler, epoch):
 
     for batch_idx, (data, targets) in enumerate(loop):
         data = data.to(device=DEVICE)
-        
-        # TO-DO: Class imbalance has to be managed by giving the loss function a weight for each image because batch size 1
-        
-        # print(max(targets))
+        pos_weight = (targets==0).sum() / (targets==1).sum()
+        # pos_weight ist das Schwarz-Weiß verhältnis zum Ausgleich der übergewichteten Anzahl ("x-Fache") 
+        # Klassen-Ungleichgewicht  ( Schwarz zu Weiß Anteil)  
 
-        # class_weights = torch.tensor(compute_class_weight(class_weight='balanced', classes=np.unique(targets), y=targets ))
-        # print(class_weights)
-        # loss_fn = nn.BCEWithLogitsLoss()
-
+        #Wichtige Loss_fn siehe Zeile 128      
+        loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
         targets = targets.float().unsqueeze(1).to(device=DEVICE)
         
         
@@ -80,12 +92,10 @@ def train_fn(loader, model, optimizer, loss_fn, scaler, epoch):
 def main():
     torch.set_grad_enabled(True)
     train_transform = A.Compose([
-        A.Resize(height=IMAGE_HEIGHT, width=IMAGE_WIDTH),
+        A.Resize(height=IMAGE_HEIGHT, width=IMAGE_WIDTH),        
         # A.Rotate(limit=35, p=1.0),
-        A.HorizontalFlip(p=0.5),
-        A.VerticalFlip(p=0.1),
-        # TO-DO: are the mean and std lists correct with [0,0,0] and [1,1,1]. Std. implimentation has different values.
-        # Should a custom one be calculated once for an average of the samples or is the std better?
+        # A.HorizontalFlip(p=0.5),
+        # A.VerticalFlip(p=0.1),
         A.Normalize(
             mean=[0.0, 0.0, 0.0],
             std=[1.0, 1.0, 1.0],
@@ -110,12 +120,13 @@ def main():
             
     logging.info(f"Start of run: {RUN_NAME}")
 
+    # Unet in_channels => "1.R,2.G,3.B" -> out_channels=> mehrere Klassen
+    # Empfehlung: Andere Fehlerfunktion: ( Cross-Entropy -> Metric_Based: Intersection Over Union Loss ( Schnittmenge über Vereinigungsmenge) )
+    # Siehe 126 
     model = UNET(in_channels=3, out_channels=1).to(DEVICE)
     
-    # TO-DO:
-    # "[...] pixel-wise soft-max over the final feature map combined with the cross entropy loss function."
-    # class_weights = torch.tensor(compute_class_weight(class_weight='balanced', classes=[0, 1],  ))
-    loss_fn = nn.BCEWithLogitsLoss() # weight can be added to make it weighted or balanced BCE. Weight tensor must be calculated beforehand
+    # Annahme: 95 zu 5 ggf. 19 ?
+    loss_fn = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(20.)) # weight can be added to make it weighted or balanced BCE. Weight tensor must be calculated beforehand
 
     optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.99) # High momentum due to small batch size
 
