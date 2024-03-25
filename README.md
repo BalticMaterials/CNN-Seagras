@@ -35,7 +35,7 @@
   </a>
 
 <h3 align="center">Anwendung des Convolutional Neural
-Network Modells U-Net im Kontext
+Network Modells U-Net im Kontext
 der automatisierten Gewinnung von
 Seegras aus Treibsel</h3>
 
