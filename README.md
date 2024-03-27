@@ -40,7 +40,7 @@ der automatisierten Gewinnung von
 Seegras aus Treibsel</h3>
 
   <p align="center">
-    different python scripts sorted in folders in field of application
+    ( Klasse )
     <br />
     <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
     <br />
@@ -96,7 +96,9 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built for
 
-* [![Python][Python.py]][Next-url]
+* [![Python][Python.py]][python-url]
+with
+* [![PyTorch][Pytorch.py]][pytorch-url]
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -106,9 +108,16 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 <!-- GETTING STARTED -->
 ## Getting Started
+https://albumentations.ai/docs/getting_started/
+mask_augmentation/
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+The trained U-Net is a Neural Network ("NN") (*0). The goal is to identify Objects in an image. It is a specific Type in the class of
+Convolutional neural network ("CNN")(*1), where the images are reduced to unique Patterns, which are characteristcal for the object, which should be identified. The netowrk
+
+(*0) https://en.wikipedia.org/wiki/U-Net
+(*1) https://en.wikipedia.org/wiki/Convolutional_neural_network
+
+
 
 ### Prerequisites
 
@@ -225,12 +234,15 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
 [license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
+[linkedin-url]: https://www.linkedin.com/company/77695588
 [product-screenshot]: images/screenshot.png
+[linkedin-url]: https://www.linkedin.com/company/77695588
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [Python-url]: https://www.python.org/
 [Python.py]: https://www.python.org/static/img/python-logo.png
+[Pytorch-url]: https://pytorch.org/
+[Pytorch.py]:https://miro.medium.com/v2/resize:fit:512/0*wtNmf_1aQR8OBGMJ.png
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
 [Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
@@ -244,4 +256,4 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 
+[JQuery-url]: https://jquery.com
